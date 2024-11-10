@@ -20,7 +20,7 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public Coupon save(Coupon coupon) {
-        return couponJpaRepository.save(CouponEntity.fromModel(coupon)).toModel();
+    public void save(Coupon coupon) {
+        couponJpaRepository.save(CouponEntity.fromModel(coupon)).toModel();
     }
 }
