@@ -3,13 +3,13 @@ package org.example.auth.user.service;
 import lombok.RequiredArgsConstructor;
 import org.example.auth.user.domain.User;
 import org.example.auth.user.domain.dto.RegisterRequest;
+import org.example.auth.user.exception.UserException;
 import org.example.auth.user.service.port.UserRepository;
-import org.example.auth.common.exception.UserException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.example.auth.common.exception.ErrorCode.EMAIL_ALREADY_EXISTS;
+import static org.example.auth.user.exception.UserErrorCode.EMAIL_ALREADY_EXISTS;
 
 
 @Service

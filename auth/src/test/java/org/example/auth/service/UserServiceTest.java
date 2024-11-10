@@ -1,6 +1,6 @@
 package org.example.auth.service;
 
-import org.example.auth.common.exception.UserException;
+import org.example.auth.user.exception.UserException;
 import org.example.auth.user.domain.User;
 import org.example.auth.user.domain.dto.RegisterRequest;
 import org.example.auth.user.service.UserService;
