@@ -1,1 +1,6 @@
 rootProject.name = 'off-coupon'
+
+include 'auth'
+include 'coupon'
+include 'issue-coupon'
+include 'redis'
