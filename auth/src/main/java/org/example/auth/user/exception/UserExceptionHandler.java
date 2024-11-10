@@ -1,4 +1,4 @@
-package org.example.auth.common.exception;
+package org.example.auth.user.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.example.auth.common.exception.ErrorCode.*;
+import static org.example.auth.user.exception.UserErrorCode.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
