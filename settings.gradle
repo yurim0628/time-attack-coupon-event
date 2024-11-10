@@ -1,1 +1,3 @@
 rootProject.name = 'off-coupon'
+
+include 'auth'
