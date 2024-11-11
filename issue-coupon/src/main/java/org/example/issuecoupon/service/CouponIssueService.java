@@ -7,12 +7,11 @@ import org.example.coupon.domain.Coupon;
 import org.example.coupon.service.CouponService;
 import org.example.issuecoupon.domain.CouponIssue;
 import org.example.issuecoupon.domain.SaveCouponIssueRequest;
-import org.example.issuecoupon.exception.IssueCouponException;
 import org.example.issuecoupon.service.port.CouponIssueRepository;
+import org.example.redis.domain.CouponCache;
+import org.example.redis.service.CouponIssueRedisService;
+import org.example.redis.service.CouponRedisService;
 import org.springframework.stereotype.Service;
-
-import static org.example.issuecoupon.exception.ErrorCode.COUPON_ALREADY_ISSUED_BY_USER;
-import static org.example.issuecoupon.exception.ErrorCode.COUPON_ISSUE_QUANTITY_EXCEEDED;
 
 @Slf4j
 @Service
@@ -20,57 +19,53 @@ import static org.example.issuecoupon.exception.ErrorCode.COUPON_ISSUE_QUANTITY_
 public class CouponIssueService {
 
     private final CouponService couponService;
+    private final CouponRedisService couponCacheService;
+    private final CouponIssueRedisService couponIssueCacheService;
     private final CouponIssueRepository couponIssueRepository;
 
     @Transactional
     public void issueCoupon(SaveCouponIssueRequest saveCouponIssueRequest) {
         Long couponId = saveCouponIssueRequest.couponId();
         Long userId = saveCouponIssueRequest.userId();
+
         log.info("Issuing Coupon. " +
                 "Coupon ID: [{}], User ID: [{}]", couponId, userId);
-
-        if (!isTotalIssueQuantityAvailable(couponId)) {
-            throw new IssueCouponException(COUPON_ISSUE_QUANTITY_EXCEEDED);
-        }
-        if (isUserAlreadyIssuedCoupon(couponId, userId)) {
-            throw new IssueCouponException(COUPON_ALREADY_ISSUED_BY_USER);
-        }
+        CouponCache cachedCoupon = getCouponCache(couponId);
+        validateCouponIssue(cachedCoupon, String.valueOf(userId));
 
         saveCouponIssue(couponId, userId);
-        incrementIssuedQuantity(couponId);
         log.info("Coupon Issued Successfully. " +
                 "Coupon ID: [{}], User ID: [{}]", couponId, userId);
     }
 
-    private Coupon getCoupon(Long couponId) {
-        return couponService.getCoupon(couponId);
+    private CouponCache getCouponCache(Long couponId) {
+        return couponCacheService.getCoupon(couponId)
+                .orElseGet(() -> fetchCouponFromDbAndCache(couponId));
     }
 
-    private boolean isTotalIssueQuantityAvailable(Long couponId) {
-        Coupon coupon = getCoupon(couponId);
-        Long maxQuantity = coupon.getMaxQuantity();
-        Long issuedQuantity = coupon.getIssuedQuantity();
-        log.info("Checking Total Issue Quantity. " +
-                "Issued Count: [{}], Max Quantity: [{}]", issuedQuantity, maxQuantity);
-        return issuedQuantity < maxQuantity;
+    private CouponCache fetchCouponFromDbAndCache(Long couponId) {
+        log.info("Cache miss. Fetching Coupon from Database and Caching." +
+                "Coupon ID: [{}]", couponId);
+
+        Coupon coupon = couponService.getCoupon(couponId);
+        CouponCache couponCache = CouponCache.of(
+                coupon.getId(),
+                coupon.getMaxQuantity(),
+                coupon.getEventId()
+        );
+
+        couponCacheService.saveCoupon(couponCache);
+        return couponCache;
     }
 
-    private boolean isUserAlreadyIssuedCoupon(Long couponId, Long userId) {
-        log.info("Verifying User Coupon Issue Status. " +
-                "Coupon ID: [{}], User ID: [{}]", couponId, userId);
-        return couponIssueRepository.existsByCouponIdAndUserId(couponId, userId);
+    private void validateCouponIssue(CouponCache cachedCoupon, String userId) {
+        couponIssueCacheService.checkCouponIssueQuantityAndDuplicate(cachedCoupon, userId);
     }
 
     private void saveCouponIssue(Long couponId, Long userId) {
-        log.info("Saving Coupon Issue Request. " +
+        log.info("Saving Coupon Issue. " +
                 "Coupon ID: [{}], User ID: [{}]", couponId, userId);
         CouponIssue couponIssue = CouponIssue.of(couponId, userId);
         couponIssueRepository.save(couponIssue);
-    }
-
-    private void incrementIssuedQuantity(Long couponId) {
-        Coupon coupon = getCoupon(couponId);
-        coupon.incrementIssuedQuantity();
-        couponService.saveCoupon(coupon);
     }
 }
