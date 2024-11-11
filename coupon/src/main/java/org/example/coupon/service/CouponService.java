@@ -20,9 +20,4 @@ public class CouponService {
         return couponRepository.findById(couponId)
                 .orElseThrow(() -> new CouponException(COUPON_NOT_FOUND));
     }
-
-    @Transactional
-    public void saveCoupon(Coupon coupon) {
-        couponRepository.save(coupon);
-    }
 }
