@@ -1,55 +1,46 @@
 package org.example.redis.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.redis.exception.RedisException;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+import static java.util.Collections.singletonList;
 
-import static org.example.redis.exception.RedisErrorCode.COMMON_SYSTEM_ERROR;
-
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CouponIssueRedisCache {
 
-    private final static Long NO_USERS_ISSUED = 0L;
     private final StringRedisTemplate redisTemplate;
 
     /**
-     * Redis의 SCARD 명령어를 사용하여 특정 쿠폰에 대해 발급된 사용자 수를 확인.
+     * 쿠폰 발급 가능 여부를 확인하는 메서드.
+     * Lua 스크립트를 사용하여 발급된 사용자 수가 최대 수량을 초과했는지,
+     * 사용자에게 이미 발급된 쿠폰이 있는지 확인한 후, 해당 사용자에게 쿠폰 발급을 시도합니다.
      *
-     * @param key 쿠폰이 발급된 사용자 데이터를 저장하는 Redis 집합의 키.
-     * @return 해당 쿠폰을 발급받은 사용자 수. 존재하지 않을 경우 0을 반환.
-     * @throws RedisException Redis에서 사용자 수 조회 중 예외가 발생할 경우 공통 예외로 처리.
+     * @param couponIssueRequestKey 쿠폰 발급 요청을 나타내는 Redis 키
+     * @param maxQuantity           최대 발급 수량
+     * @param userId                사용자 ID
+     * @return 0: 쿠폰 발급 성공, 1: 발급 수량 초과, 2: 이미 발급된 사용자
      */
-    public Long getIssuedCouponUserCount(String key) {
-        try {
-            Long count = redisTemplate.opsForSet().size(key);
-            return Objects.requireNonNullElse(count, NO_USERS_ISSUED);
-        } catch (Exception e) {
-            log.error("Failed to Get Issued Coupon User Count for Key: [{}]", key, e);
-            throw new RedisException("Failed to Get Issued Coupon User Count", COMMON_SYSTEM_ERROR);
-        }
-    }
+    public Long checkCouponIssueAvailability(String couponIssueRequestKey, String maxQuantity, String userId) {
+        String script =
+                "local max_quantity = tonumber(ARGV[1]) " +
+                        "local user_id = ARGV[2] " +
+                        "local issued_count = redis.call('SCARD', KEYS[1]) " +
+                        "if issued_count >= max_quantity then " +
+                        "    return 1 " +
+                        "end " +
+                        "if redis.call('SISMEMBER', KEYS[1], user_id) == 1 then " +
+                        "    return 2 " +
+                        "end " +
+                        "redis.call('SADD', KEYS[1], user_id) " +
+                        "return 0";
 
-    /**
-     * Redis의 SADD 명령어를 사용하여 특정 쿠폰에 대해 사용자를 추가.
-     *
-     * @param key 쿠폰 발급 사용자 데이터를 저장하는 Redis 집합의 키.
-     * @param value 발급받은 사용자를 나타내는 식별자.
-     * @return 사용자가 쿠폰 집합에 성공적으로 추가되면 true, 그렇지 않다면 false.
-     * @throws RedisException Redis에서 사용자 추가 중 예외가 발생할 경우 공통 예외로 처리.
-     */
-    public Long addIssuedCouponUser(String key, String value) {
-        try {
-            Long result = redisTemplate.opsForSet().add(key, value);
-            return Objects.requireNonNullElse(result, NO_USERS_ISSUED);
-        } catch (Exception e) {
-            log.error("Failed to Add Issued Coupon User for Key: [{}], Value: [{}]", key, value, e);
-            throw new RedisException("Failed to Add Issued Coupon User", COMMON_SYSTEM_ERROR);
-        }
+        return redisTemplate.execute(
+                new DefaultRedisScript<>(script, Long.class),
+                singletonList(couponIssueRequestKey),
+                maxQuantity, userId
+        );
     }
 }
