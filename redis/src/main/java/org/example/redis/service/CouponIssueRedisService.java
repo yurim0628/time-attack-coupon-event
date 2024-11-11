@@ -29,7 +29,8 @@ public class CouponIssueRedisService {
         switch (result.intValue()) {
             case 1 -> throw new RedisException(COUPON_ISSUE_QUANTITY_EXCEEDED);
             case 2 -> throw new RedisException(COUPON_ALREADY_ISSUED_BY_USER);
-            case 0 -> log.info("Coupon Issued Successfully. USER ID: [{}], Coupon ID: [{}]", userId, couponId);
+            case 0 -> log.info("Coupon Issued Successfully. " +
+                    "USER ID: [{}], Coupon ID: [{}]", userId, couponId);
             default -> throw new RedisException(COMMON_SYSTEM_ERROR);
         }
     }
