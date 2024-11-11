@@ -21,6 +21,14 @@ public class CouponRedisCache {
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Redis에서 특정 키로 저장된 쿠폰 데이터를 조회하는 메서드.
+     * 키에 해당하는 데이터가 없거나 JSON 변환에 실패할 경우 빈 Optional을 반환.
+     *
+     * @param key Redis에 저장된 쿠폰 데이터의 키.
+     * @return 조회된 쿠폰 데이터를 포함하는 Optional<CouponRedisEntity>.
+     * @throws RedisException Redis에서 데이터 조회 중 예외 발생 시 공통 예외로 처리.
+     */
     public Optional<CouponRedisVO> getCoupon(String key) {
         log.info("Find Redis Key = [{}]", key);
         String serializedValue = redisTemplate.opsForValue().get(key);
