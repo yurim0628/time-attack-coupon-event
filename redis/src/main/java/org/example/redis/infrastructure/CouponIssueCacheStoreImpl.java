@@ -14,4 +14,9 @@ public class CouponIssueCacheStoreImpl implements CouponIssueCacheStore {
     public Long checkCouponIssueAvailability(String couponIssueRequestKey, String maxQuantity, String userId) {
         return couponIssueRedisCache.checkCouponIssueAvailability(couponIssueRequestKey, maxQuantity, userId);
     }
+
+    @Override
+    public Long getIssuedCouponUserCount(String issueRequestKey) {
+        return couponIssueRedisCache.getIssuedCouponUserCount(issueRequestKey);
+    }
 }

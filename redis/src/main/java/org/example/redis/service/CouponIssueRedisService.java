@@ -34,4 +34,9 @@ public class CouponIssueRedisService {
             default -> throw new RedisException(COMMON_SYSTEM_ERROR);
         }
     }
+
+    public Long getIssuedCouponCount(Long couponId) {
+        String issuedCountKey = getCouponIssueRequestKey(couponId);
+        return couponIssueCacheStore.getIssuedCouponUserCount(issuedCountKey);
+    }
 }
