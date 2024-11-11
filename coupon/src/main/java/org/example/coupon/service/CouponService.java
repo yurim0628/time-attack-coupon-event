@@ -7,6 +7,8 @@ import org.example.coupon.service.port.CouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.example.coupon.exception.ErrorCode.COUPON_NOT_FOUND;
 
 @Service
@@ -19,5 +21,9 @@ public class CouponService {
     public Coupon getCoupon(Long couponId) {
         return couponRepository.findById(couponId)
                 .orElseThrow(() -> new CouponException(COUPON_NOT_FOUND));
+    }
+
+    public List<Coupon> getAllCoupons() {
+        return couponRepository.findAll();
     }
 }
