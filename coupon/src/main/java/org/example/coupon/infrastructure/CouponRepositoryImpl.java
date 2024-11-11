@@ -18,9 +18,4 @@ public class CouponRepositoryImpl implements CouponRepository {
     public Optional<Coupon> findById(Long id) {
         return couponJpaRepository.findById(id).map(CouponEntity::toModel);
     }
-
-    @Override
-    public void save(Coupon coupon) {
-        couponJpaRepository.save(CouponEntity.fromModel(coupon)).toModel();
-    }
 }

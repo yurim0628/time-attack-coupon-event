@@ -7,6 +7,7 @@ import static org.example.issuecoupon.domain.CouponStatus.ACTIVE;
 
 @Getter
 public class CouponIssue {
+
     private final Long id;
     private final CouponStatus couponStatus;
     private final Long couponId;
