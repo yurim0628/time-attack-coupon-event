@@ -14,7 +14,7 @@ public class RequestUrlUtils {
     public static final String GET_COUPONS_FROM_DB_ENDPOINT = "/coupons/{couponId}";
     public static final String GET_COUPONS_FROM_CACHE_ENDPOINT = "/redis/coupons/{couponId}";
     public static final String SAVE_COUPONS_FROM_CACHE_ENDPOINT = "/redis/coupons";
-    public static final String VALIDATE_ISSUE_COUPONS_ENDPOINT = "/redis/coupon/issues/validate";
+    public static final String VALIDATE_ISSUE_COUPONS_ENDPOINT = "/redis/coupon-issues/validate";
 
     public static String buildUri(String baseUrl, String endpoint) {
         return UriComponentsBuilder
