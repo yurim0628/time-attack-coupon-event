@@ -1,4 +1,4 @@
-package org.example.issuecoupon.domain;
+package org.example.issuecoupon.domain.dto;
 
 public record SaveCouponIssueRequest(
         Long userId,
