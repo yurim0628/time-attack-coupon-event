@@ -2,7 +2,6 @@ package org.example.issuecoupon.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.coupon.domain.DiscountType;
 import org.example.issuecoupon.domain.dto.GetCouponResponse;
 
 import java.time.LocalDateTime;
