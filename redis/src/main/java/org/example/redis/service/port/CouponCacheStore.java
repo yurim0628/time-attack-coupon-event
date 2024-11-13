@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface CouponCacheStore {
 
-    Optional<CouponCache> getCoupon(String key);
+    void saveCoupon(String saveCouponKey, CouponCache couponCache);
 
-    void saveCoupon(String key, CouponCache couponCache);
+    Optional<CouponCache> getCoupon(String getCouponKey);
 }
