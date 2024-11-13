@@ -2,7 +2,7 @@ package org.example.issuecoupon.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.issuecoupon.domain.dto.GetCouponRedisResponse;
+import org.example.issuecoupon.domain.dto.GetCouponCacheResponse;
 
 @Getter
 public class CouponCache {
@@ -26,11 +26,11 @@ public class CouponCache {
                 .build();
     }
 
-    public static CouponCache from(GetCouponRedisResponse getCouponRedisResponse) {
+    public static CouponCache from(GetCouponCacheResponse getCouponCacheResponse) {
         return CouponCache.builder()
-                .id(getCouponRedisResponse.couponId())
-                .maxQuantity(getCouponRedisResponse.maxQuantity())
-                .eventId(getCouponRedisResponse.eventId())
+                .id(getCouponCacheResponse.couponId())
+                .maxQuantity(getCouponCacheResponse.maxQuantity())
+                .eventId(getCouponCacheResponse.eventId())
                 .build();
     }
 }
