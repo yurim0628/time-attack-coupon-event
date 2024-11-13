@@ -15,12 +15,14 @@ public class CouponCacheStoreImpl implements CouponCacheStore {
     private final CouponRedisCache couponRedisCache;
 
     @Override
-    public Optional<CouponCache> getCoupon(String key) {
-        return couponRedisCache.getCoupon(key).map(CouponRedisVO::toModel);
+    public void saveCoupon(String saveCouponKey, CouponCache couponCache) {
+        couponRedisCache.setCoupon(saveCouponKey, CouponRedisVO.fromModel(couponCache));
     }
 
     @Override
-    public void saveCoupon(String key, CouponCache couponCache) {
-        couponRedisCache.setCoupon(key, CouponRedisVO.fromModel(couponCache));
+    public Optional<CouponCache> getCoupon(String getCouponKey) {
+        return couponRedisCache.getCoupon(getCouponKey)
+                .map(CouponRedisVO::toModel)
+                .or(Optional::empty);
     }
 }
