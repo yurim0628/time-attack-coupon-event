@@ -2,7 +2,7 @@ package org.example.issuecoupon.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.issuecoupon.domain.SaveCouponIssueRequest;
+import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
 import org.example.issuecoupon.service.CouponIssueService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

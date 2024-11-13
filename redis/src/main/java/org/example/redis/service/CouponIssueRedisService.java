@@ -2,7 +2,7 @@ package org.example.redis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.redis.domain.CouponCache;
+import org.example.redis.domain.dto.ValidateCouponIssueRequest;
 import org.example.redis.exception.RedisException;
 import org.example.redis.service.port.CouponIssueCacheStore;
 import org.springframework.stereotype.Component;
@@ -17,9 +17,10 @@ public class CouponIssueRedisService {
 
     private final CouponIssueCacheStore couponIssueCacheStore;
 
-    public void checkCouponIssueQuantityAndDuplicate(CouponCache couponCache, String userId) {
-        Long couponId = couponCache.getId();
-        String maxQuantity = String.valueOf(couponCache.getMaxQuantity());
+    public void checkCouponIssueQuantityAndDuplicate(ValidateCouponIssueRequest validateCouponIssueRequest) {
+        Long couponId = validateCouponIssueRequest.couponId();
+        String maxQuantity = String.valueOf(validateCouponIssueRequest.maxQuantity());
+        String userId = String.valueOf(validateCouponIssueRequest.userId());
         log.info("Checking Total Issued Coupon Quantity and Duplicate Issuance." +
                 "Coupon ID: [{}], User ID: [{}]", couponId, userId);
 
@@ -27,11 +28,10 @@ public class CouponIssueRedisService {
         Long result = couponIssueCacheStore.checkCouponIssueAvailability(couponIssueRequestKey, maxQuantity, userId);
 
         switch (result.intValue()) {
-            case 1 -> throw new RedisException(COUPON_ISSUE_QUANTITY_EXCEEDED);
-            case 2 -> throw new RedisException(COUPON_ALREADY_ISSUED_BY_USER);
             case 0 -> log.info("Coupon Issued Successfully. " +
                     "USER ID: [{}], Coupon ID: [{}]", userId, couponId);
-            default -> throw new RedisException(COMMON_SYSTEM_ERROR);
+            case 1 -> throw new RedisException(COUPON_ISSUE_QUANTITY_EXCEEDED);
+            case 2 -> throw new RedisException(COUPON_ALREADY_ISSUED_BY_USER);
         }
     }
 
