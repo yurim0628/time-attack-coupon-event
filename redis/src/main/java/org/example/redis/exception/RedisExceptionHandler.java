@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.example.redis.exception.RedisErrorCode.*;
@@ -21,13 +23,18 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class RedisExceptionHandler {
 
     @ExceptionHandler(value = RedisException.class)
-    public ResponseEntity<String> handleCustomException(RedisException e) {
+    public ResponseEntity<Map<String, String>> handleCustomException(RedisException e) {
+        String name = e.getRedisErrorCode().name();
         HttpStatus status = e.getRedisErrorCode().getHttpStatus();
         String message = e.getRedisErrorCode().getMessage();
 
         log.error("[CustomException] Status: {}, Message: {}", status, message);
 
-        return new ResponseEntity<>(message, status);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("error", name);
+        responseBody.put("message", message);
+
+        return new ResponseEntity<>(responseBody, status);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
