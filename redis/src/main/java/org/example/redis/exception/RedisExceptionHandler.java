@@ -31,7 +31,7 @@ public class RedisExceptionHandler {
         log.error("[CustomException] Status: {}, Message: {}", status, message);
 
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("error", name);
+        responseBody.put("code", name);
         responseBody.put("message", message);
 
         return new ResponseEntity<>(responseBody, status);
