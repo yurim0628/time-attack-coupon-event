@@ -11,7 +11,7 @@
 - 쿠폰 발급 서비스 (Issue Coupon Service): 쿠폰 발급 및 검증 처리.
 - 캐시 서비스 (Cache Service): 쿠폰 정보를 캐시하고 빠른 조회를 지원.
 
-각 서비스는 Spring Boot와 Java 17을 기반으로 독립적으로 구현되었습니다. 서비스 간 통신은 RESTful API와 Kafka 메시지 브로커를 통해 이루어지며, 데이터 조회 성능을 최적화하기 위해 Redis 기반의 캐시 서비스를 도입했습니다. 또한, Docker와 Docker Compose를 사용하여 서비스를 컨테이너화하고, 이를 통해 서비스 관리와 연결을 용이하게 구현했습니다.
+각 서비스는 Spring Boot와 Java 17을 기반으로 독립적으로 구현되었습니다. 서비스 간 통신은 RESTful API와 Kafka 메시지 브로커를 통해 이루어지며, 데이터 조회 성능 최적화 및 동시성 제어를 위해 Redis 기반의 캐시 서비스를 도입했습니다. 또한, Docker와 Docker Compose를 사용하여 서비스를 컨테이너화하고, 이를 통해 서비스 관리와 연결을 용이하게 구현했습니다.
 
 ## 프로젝트 목표
 * 높은 트래픽 상황에서도 안정적인 쿠폰 발급 시스템 제공
@@ -24,18 +24,8 @@
 각 서비스가 독립적으로 실행되며, 통합된 설정 관리와 서비스 디스커버리를 통해 효율적인 서비스 연결을 구현했습니다.
 
 #### 구성 요소
-- Spring Cloud Gateway (포트: 8080)
-  - 클라이언트의 모든 요청이 처음으로 도달하는 진입점 역할을 수행.
-  - 요청을 적절한 마이크로서비스로 라우팅하여 API 호출을 관리.
-- Eureka Server (포트: 8761)
-  - 서비스 디스커버리 서버.
-  - 마이크로서비스들이 자신을 등록하고 서로의 위치를 찾아 통신할 수 있도록 지원.
-- Spring Cloud Config Server (포트: 9000)
-  - 분산된 마이크로서비스의 설정을 중앙에서 관리.
-  - Config Repository를 참조하여 각 서비스에 필요한 설정 정보를 제공.
-- Config Repository
-  - Config Server가 참조하는 설정 저장소.
-  - Git을 통해 설정 파일을 관리하고 변경된 설정을 각 서비스에 반영.
-- Micro Service
-  - user (포트: 8081), coupon (포트: 8082), issue-coupon (포트: 8083), cache (포트: 8084)
-  - 각 서비스는 Spring Boot로 구축, Eureka Client를 통해 서비스 디스커버리에 등록, Config Server를 통해 설정을 관리.
+- **Spring Cloud Gateway**: 클라이언트 요청의 진입점으로, API 호출을 적절한 마이크로서비스로 라우팅.
+- **Eureka Server**: 서비스 디스커버리 서버로, 마이크로서비스들이 서로를 찾고 통신할 수 있도록 지원.
+- **Spring Cloud Config Server**: 중앙에서 설정을 관리하며, 각 서비스에 필요한 설정 정보를 제공.
+- **Config Repository**: Git을 통해 Config Server가 참조하는 설정 저장소.
+- **Micro Service**: 각 마이크로서비스는 Spring Boot로 구축되었으며, Eureka Client로 등록되고 Config Server로 설정을 관리.
