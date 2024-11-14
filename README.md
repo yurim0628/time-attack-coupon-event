@@ -14,3 +14,17 @@
 각 서비스는 Spring Boot와 Java 17을 기반으로 독립적으로 구현되었습니다. 서비스 간 통신은 RESTful API와 Kafka 메시지 브로커를 통해 이루어지며, 데이터 조회 성능을 최적화하기 위해 Redis 기반의 캐시 서비스를 도입했습니다. 또한, Docker와 Docker Compose를 사용하여 서비스를 컨테이너화하고, 이를 통해 서비스 관리와 연결을 용이하게 구현했습니다.
 
 ## 기술적 목표
+
+## Spring Cloud 기반의 MSA 구성도
+<img width="891" alt="image" src="https://github.com/user-attachments/assets/d1c10066-a2d1-41dc-946c-69221908efee">
+
+- Spring Cloud Gateway
+  - 클라이언트 요청의 진입점으로 각 요청을 적절한 마이크로서비스로 라우팅.
+- Eureka Server
+  - 마이크로서비스들이 자신을 등록하고 서로의 위치를 찾아 통신할 수 있도록 지원하는 서비스 디스커버리 서버.
+- Spring Cloud Config Server
+  - 분산 마이크로서비스의 설정을 중앙에서 관리하며 Config Repository에서 필요한 설정 정보를 제공.
+- Config Repository 
+  - Config Server가 참조하는 설정 저장소로 Git을 통해 설정 파일을 관리하고 변경된 설정을 각 서비스에 반영.
+- Micro Service 
+  - user, coupon, issue-coupon, cache 기능을 각각 독립적으로 수행하는 마이크로서비스들.
