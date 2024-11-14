@@ -2,7 +2,6 @@ package org.example.coupon.service;
 
 import org.example.coupon.domain.Coupon;
 import org.example.coupon.service.port.CouponRepository;
-import org.example.redis.service.CouponIssueRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +29,7 @@ public class CouponSyncSchedulerTest {
     private CouponService couponService;
 
     @Mock
-    private CouponIssueRedisService couponIssueRedisService;
+    private CouponApiService couponApiService;
 
     @Mock
     private CouponRepository couponRepository;
@@ -62,8 +61,8 @@ public class CouponSyncSchedulerTest {
         List<Coupon> coupons = Arrays.asList(coupon1, coupon2);
 
         when(couponService.getAllCoupons()).thenReturn(coupons);
-        when(couponIssueRedisService.getIssuedCouponCount(coupon1.getId())).thenReturn(50L);
-        when(couponIssueRedisService.getIssuedCouponCount(coupon2.getId())).thenReturn(150L);
+        when(couponApiService.requestGetIssuedCouponCount(coupon1.getId())).thenReturn(50L);
+        when(couponApiService.requestGetIssuedCouponCount(coupon2.getId())).thenReturn(150L);
 
         // When
         couponSyncScheduler.issuedQuantityUpdate();
@@ -72,7 +71,7 @@ public class CouponSyncSchedulerTest {
         verify(couponRepository, times(1)).updateIssuedQuantity(coupon1.getId(), 50L);
         verify(couponRepository, times(1)).updateIssuedQuantity(coupon2.getId(), 150L);
         verify(couponService, times(1)).getAllCoupons();
-        verify(couponIssueRedisService, times(2)).getIssuedCouponCount(anyLong());
+        verify(couponApiService, times(2)).requestGetIssuedCouponCount(anyLong());
     }
 
     @Test
@@ -102,8 +101,8 @@ public class CouponSyncSchedulerTest {
         List<Coupon> coupons = Arrays.asList(coupon1, coupon2);
 
         when(couponService.getAllCoupons()).thenReturn(coupons);
-        when(couponIssueRedisService.getIssuedCouponCount(coupon1.getId())).thenReturn(0L);
-        when(couponIssueRedisService.getIssuedCouponCount(coupon2.getId())).thenReturn(0L);
+        when(couponApiService.requestGetIssuedCouponCount(coupon1.getId())).thenReturn(0L);
+        when(couponApiService.requestGetIssuedCouponCount(coupon2.getId())).thenReturn(0L);
 
         // When
         couponSyncScheduler.issuedQuantityUpdate();
@@ -111,6 +110,6 @@ public class CouponSyncSchedulerTest {
         // Then
         verify(couponRepository, never()).updateIssuedQuantity(anyLong(), anyLong());
         verify(couponService, times(1)).getAllCoupons();
-        verify(couponIssueRedisService, times(2)).getIssuedCouponCount(anyLong());
+        verify(couponApiService, times(2)).requestGetIssuedCouponCount(anyLong());
     }
 }

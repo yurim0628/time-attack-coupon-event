@@ -8,13 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/coupons")
+@RequestMapping("/coupon-issues")
 @RequiredArgsConstructor
 public class CouponIssueController {
 
     private final CouponIssueService couponIssueService;
 
-    @PostMapping("/issues")
+    @PostMapping
     public ResponseEntity<Void> issueCoupon(@RequestBody @Valid SaveCouponIssueRequest saveCouponIssueRequest) {
         couponIssueService.issueCoupon(saveCouponIssueRequest);
         return ResponseEntity.ok().build();
