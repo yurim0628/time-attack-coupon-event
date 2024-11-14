@@ -13,9 +13,9 @@ public class TokenAuthenticationService {
 
     private final TokenAuthenticationProvider tokenAuthenticationProvider;
 
-    public Token createToken(String email, String authorities) {
-        String accessToken = tokenAuthenticationProvider.generateAccessToken(email, authorities);
-        log.info("Access Token Generated for Email: [{}]", email);
+    public Token createToken(String userId, String authorities) {
+        String accessToken = tokenAuthenticationProvider.generateAccessToken(userId, authorities);
+        log.info("Access Token Generated for USER ID: [{}]", userId);
         return Token.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
