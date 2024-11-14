@@ -18,7 +18,7 @@
 ## Spring Cloud 기반의 MSA 구성도
 <img width="891" alt="image" src="https://github.com/user-attachments/assets/d1c10066-a2d1-41dc-946c-69221908efee">
 
-이 구성도는 Spring Cloud를 기반으로 한 MSA를 나타냅니다. 각 서비스가 독립적으로 실행되며, 통합된 설정 관리와 서비스 디스커버리를 통해 효율적인 서비스 연결을 구현합니다.
+이 구성도는 Spring Cloud를 기반으로 한 MSA를 나타냅니다. 각 서비스가 독립적으로 실행되며, 통합된 설정 관리와 서비스 디스커버리를 통해 효율적인 서비스 연결을 구현합니다.
 
 ### 구성 요소
 - Spring Cloud Gateway (포트: 8080)
@@ -34,5 +34,5 @@
   - Config Server가 참조하는 설정 저장소.
   - Git을 통해 설정 파일을 관리하고 변경된 설정을 각 서비스에 반영.
 - Micro Service
-  - user-service (포트: 8081), coupon-service (포트: 8082), issue-coupon-service (포트: 8083), cache-service (포트: 8084)
+  - user (포트: 8081), coupon (포트: 8082), issue-coupon (포트: 8083), cache (포트: 8084)
   - 각 서비스는 Spring Boot로 구축, Eureka Client를 통해 서비스 디스커버리에 등록, Config Server를 통해 설정을 관리.
