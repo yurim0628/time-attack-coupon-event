@@ -22,10 +22,10 @@ public class TokenAuthenticationProvider {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public String generateAccessToken(String email, String authorities) {
+    public String generateAccessToken(String userId, String authorities) {
         Date expirationDate = calculateTokenExpiration(ACCESS_TOKEN_EXPIRATION);
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(userId)
                 .setExpiration(expirationDate)
                 .claim(CLAIM_KEY, authorities)
                 .signWith(key, HS256)

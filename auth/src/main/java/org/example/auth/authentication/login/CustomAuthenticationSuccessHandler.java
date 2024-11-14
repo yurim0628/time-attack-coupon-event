@@ -28,7 +28,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         Token token = tokenAuthenticationService.createToken(
-                principalDetails.getUsername(),
+                principalDetails.getUserId(),
                 principalDetails.getAuthorities().toString()
         );
         sendSuccessResponse(response, LoginResponse.from(token));

@@ -43,4 +43,8 @@ public record PrincipalDetails(User user) implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getUserId() {
+        return String.valueOf(user.getId());
+    }
 }
