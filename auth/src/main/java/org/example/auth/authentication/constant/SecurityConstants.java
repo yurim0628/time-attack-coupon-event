@@ -2,7 +2,7 @@ package org.example.auth.authentication.constant;
 
 public class SecurityConstants {
 
-    public static final String LOGIN_URL_PATTERN = "/auth/login";
+    public static final String LOGIN_URL_PATTERN = "/users/login";
     public static final String DEFAULT_HTTP_METHOD = "POST";
 
     public static final String EMAIL_ATTRIBUTE = "email";
