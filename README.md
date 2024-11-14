@@ -1,5 +1,5 @@
 ## 개요
-<img width="1086" alt="image" src="https://github.com/user-attachments/assets/ff74f7a7-1c2a-4ce2-819d-29f164199b43">
+<img width="948" alt="image" src="https://github.com/user-attachments/assets/e51537fa-eb57-4a8f-9f0d-b0cc74d30132">
 
 이 프로젝트는 선착순 쿠폰 발행을 중심으로 하여, 이벤트 기반으로 쿠폰을 관리하는 서비스입니다. 이벤트 기간 동안 조건을 충족한 사용자에게 선착순으로 쿠폰을 발급하는 기능을 제공합니다.
 
