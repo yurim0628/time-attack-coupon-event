@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.coupon.domain.Coupon;
 import org.example.coupon.service.port.CouponRepository;
-import org.example.redis.service.CouponIssueRedisService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,7 @@ public class CouponSyncScheduler {
     private static final Long NO_ISSUED_COUNT = 0L;
 
     private final CouponService couponService;
-    private final CouponIssueRedisService couponIssueRedisService;
+    private final CouponApiService couponApiService;
     private final CouponRepository couponRepository;
 
     @Scheduled(
@@ -33,7 +32,7 @@ public class CouponSyncScheduler {
         List<Coupon> coupons = couponService.getAllCoupons();
         for (Coupon coupon : coupons) {
             Long couponId = coupon.getId();
-            Long issuedCount = couponIssueRedisService.getIssuedCouponCount(couponId);
+            Long issuedCount = couponApiService.requestGetIssuedCouponCount(couponId);
             if (!Objects.equals(issuedCount, NO_ISSUED_COUNT)) {
                 couponRepository.updateIssuedQuantity(couponId, issuedCount);
                 log.info("Updated Issued Quantity. " +
