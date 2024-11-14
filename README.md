@@ -13,7 +13,10 @@
 
 각 서비스는 Spring Boot와 Java 17을 기반으로 독립적으로 구현되었습니다. 서비스 간 통신은 RESTful API와 Kafka 메시지 브로커를 통해 이루어지며, 데이터 조회 성능을 최적화하기 위해 Redis 기반의 캐시 서비스를 도입했습니다. 또한, Docker와 Docker Compose를 사용하여 서비스를 컨테이너화하고, 이를 통해 서비스 관리와 연결을 용이하게 구현했습니다.
 
-## 기술적 목표
+## 프로젝트 목표
+* 높은 트래픽 상황에서도 안정적인 쿠폰 발급 시스템 제공
+* 비즈니스 로직을 명확히 분리하여 확장 가능하고 유연한 구조 설계
+* Redis와 Kafka를 활용하여 시스템 성능 최적화 및 효율적 서비스 간 통신 처리
 
 ## Spring Cloud 기반의 MSA 구성도
 <img width="891" alt="image" src="https://github.com/user-attachments/assets/d1c10066-a2d1-41dc-946c-69221908efee">
