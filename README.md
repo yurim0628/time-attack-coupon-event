@@ -21,7 +21,7 @@
 ## Spring Cloud 기반의 MSA 구성도
 <img width="891" alt="image" src="https://github.com/user-attachments/assets/d1c10066-a2d1-41dc-946c-69221908efee">
 
-이 구성도를 통해 각 서비스가 독립적으로 실행되며, 통합된 설정 관리와 서비스 디스커버리를 통해 효율적인 서비스 연결을 구현합니다.
+각 서비스가 독립적으로 실행되며, 통합된 설정 관리와 서비스 디스커버리를 통해 효율적인 서비스 연결을 구현했습니다.
 
 ### 구성 요소
 - Spring Cloud Gateway (포트: 8080)
