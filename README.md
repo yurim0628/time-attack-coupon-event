@@ -30,3 +30,18 @@
 - **Spring Cloud Config Server**: 중앙에서 설정을 관리하며, 각 서비스에 필요한 설정 정보를 제공.
 - **Config Repository**: Git을 통해 Config Server가 참조하는 설정 저장소.
 - **Micro Service**: 각 마이크로서비스는 Spring Boot로 구축되었으며, Eureka Client로 등록되고 Config Server로 설정을 관리.
+
+## 쿠폰 발행 Flow
+<img width="1082" alt="image" src="https://github.com/user-attachments/assets/aa01ca4b-ea92-40c2-a94e-e7e958de4fb5">
+
+1. **User → IssueCoupon Producer**
+- 쿠폰 발급 요청: 사용자가 특정 쿠폰 발급을 요청하는 단계. 이 요청은 IssueCoupon Service의 Producer에 의해 처리.
+2. **IssueCoupon Producer → Redis**
+- 최대 발급 수량 조회: Redis에서 해당 쿠폰의 최대 발급 가능 수량과 현재 발급된 수량을 조회하여 발급 가능 여부를 판단.
+- 중복 발급 여부 조회: Redis에서 해당 사용자가 이미 쿠폰을 발급받았는지 여부를 조회하여 중복 발급을 방지.
+3. **IssueCoupon Producer → Kafka**
+- 쿠폰 발급 대기 큐 적재: 검증이 완료된 쿠폰 발급 요청은 Kafka 큐에 적재. 이를 통해 발급 요청을 비동기적으로 처리.
+4. **Kafka → IssueCoupon Consumer**
+- 쿠폰 발급 요청 처리: Kafka 큐에 쌓인 발급 요청을 IssueCoupon Service의 Consumer가 하나씩 처리. 이 단계에서 실제로 쿠폰 발급 작업이 수행.
+5. **IssueCoupon Consumer → MySQL**
+- 쿠폰 발급 내역 저장: 발급이 완료되면 해당 발급 내역을 MySQL에 저장하여 데이터를 영구적으로 보존.
