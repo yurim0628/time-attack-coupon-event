@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 public class SecurityFilterTest {
 
-    private static final String LOGIN_ENDPOINT = "/auth/login";
+    private static final String LOGIN_ENDPOINT = "/users/login";
     private static final String VALID_EMAIL = "valid@email.com";
     private static final String INVALID_EMAIL = "invalid@email.com";
     private static final String VALID_PASSWORD = "valid";

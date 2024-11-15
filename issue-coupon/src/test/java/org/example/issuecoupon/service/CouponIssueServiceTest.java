@@ -1,6 +1,5 @@
 package org.example.issuecoupon.service;
 
-import org.example.coupon.domain.DiscountType;
 import org.example.issuecoupon.domain.Coupon;
 import org.example.issuecoupon.domain.CouponCache;
 import org.example.issuecoupon.domain.CouponIssue;
@@ -17,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.example.issuecoupon.domain.DiscountType.PERCENT;
 import static org.example.issuecoupon.exception.ErrorCode.COUPON_ALREADY_ISSUED_BY_USER;
 import static org.example.issuecoupon.exception.ErrorCode.COUPON_ISSUE_QUANTITY_EXCEEDED;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,7 +52,7 @@ class CouponIssueServiceTest {
     private Coupon createCoupon() {
         return Coupon.builder()
                 .id(couponId)
-                .discountType(DiscountType.PERCENT)
+                .discountType(PERCENT)
                 .discountRate(10L)
                 .maxQuantity(maxQuantity)
                 .issuedQuantity(0L)
