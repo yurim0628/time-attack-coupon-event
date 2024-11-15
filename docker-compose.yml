@@ -1,0 +1,130 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234!!
+      MYSQL_DATABASE: sparta
+    ports:
+      - "3307:3306"
+    networks:
+      - off-coupon-network
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6380:6379"
+    networks:
+      - off-coupon-network
+
+  config-server-module:
+    image: config-server-image
+    container_name: config-server-module-container
+    ports:
+      - "9000:9000"
+    networks:
+      - off-coupon-network
+
+  eureka-server-module:
+    image: eureka-server-image
+    container_name: eureka-server-module-container
+    ports:
+      - "8761:8761"
+    networks:
+      - off-coupon-network
+
+  gateway-server-module:
+    image: gateway-server-image
+    container_name: gateway-server-module-container
+    ports:
+      - "8085:8080"
+    environment:
+      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
+    networks:
+      - off-coupon-network
+
+  user-module:
+    image: user-image
+    container_name: user-module-container
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+      - config-server-module
+      - eureka-server-module
+      - gateway-server-module
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root1234!!
+      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - off-coupon-network
+
+  coupon-module:
+    image: coupon-image
+    container_name: coupon-module-container
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql
+      - config-server-module
+      - eureka-server-module
+      - gateway-server-module
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root1234!!
+      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - off-coupon-network
+
+  issue-coupon-module:
+    image: issue-coupon-image
+    container_name: issue-coupon-module-container
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+      - config-server-module
+      - eureka-server-module
+      - gateway-server-module
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root1234!!
+      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - off-coupon-network
+
+  redis-module:
+    image: redis-image
+    container_name: redis-module-container
+    ports:
+      - "8084:8080"
+    depends_on:
+      - redis
+      - config-server-module
+      - eureka-server-module
+      - gateway-server-module
+    environment:
+      SPRING_REDIS_HOST: redis-container
+      SPRING_REDIS_PORT: 6379
+      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - off-coupon-network
+
+networks:
+  off-coupon-network:
+    driver: bridge

@@ -1,7 +1,7 @@
 package org.example.issuecoupon.service;
 
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
-import org.example.redis.exception.RedisException;
+import org.example.issuecoupon.exception.IssueCouponException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,7 @@ public class CouponIssueConcurrencyTest {
                     SaveCouponIssueRequest saveCouponIssueRequest = new SaveCouponIssueRequest(userId, 1L, 1L);
                     couponIssueService.issueCoupon(saveCouponIssueRequest);
                     successCount.incrementAndGet();
-                } catch (RedisException e) {
+                } catch (IssueCouponException e) {
                     failCount.incrementAndGet();
                 } finally {
                     latch.countDown();
