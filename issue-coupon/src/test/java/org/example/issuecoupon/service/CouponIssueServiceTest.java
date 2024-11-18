@@ -5,7 +5,11 @@ import org.example.issuecoupon.domain.CouponCache;
 import org.example.issuecoupon.domain.CouponIssue;
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
 import org.example.issuecoupon.exception.IssueCouponException;
-import org.example.issuecoupon.service.port.CouponIssueRepository;
+import org.example.issuecoupon.service.api.CouponIssueApiService;
+import org.example.issuecoupon.service.business.CouponIssueService;
+import org.example.issuecoupon.service.business.port.CouponIssueRepository;
+import org.example.issuecoupon.service.cache.CouponCacheService;
+import org.example.issuecoupon.service.cache.CouponIssueCacheService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +23,7 @@ import java.util.Optional;
 import static org.example.issuecoupon.domain.DiscountType.PERCENT;
 import static org.example.issuecoupon.exception.ErrorCode.COUPON_ALREADY_ISSUED_BY_USER;
 import static org.example.issuecoupon.exception.ErrorCode.COUPON_ISSUE_QUANTITY_EXCEEDED;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -30,6 +35,10 @@ class CouponIssueServiceTest {
     private final Long eventId = 1L;
     private final Long couponId = 1L;
     private final Long maxQuantity = 100L;
+    @Mock
+    private CouponIssueCacheService couponIssueCacheService;
+    @Mock
+    private CouponCacheService couponCacheService;
     @Mock
     private CouponIssueApiService couponIssueApiService;
     @Mock
@@ -69,8 +78,8 @@ class CouponIssueServiceTest {
         SaveCouponIssueRequest request = createRequest();
         CouponCache couponCache = createCouponCache();
 
-        when(couponIssueApiService.requestGetCouponFromCache(couponId)).thenReturn(Optional.of(couponCache));
-        when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString())).thenReturn("SUCCESS");
+        when(couponCacheService.getCoupon(couponId)).thenReturn(Optional.of(couponCache));
+        doNothing().when(couponIssueCacheService).checkCouponIssueQuantityAndDuplicate(any(CouponCache.class), anyString());
 
         // When
         couponIssueService.issueCoupon(request, "1L");
@@ -86,13 +95,21 @@ class CouponIssueServiceTest {
         SaveCouponIssueRequest request = createRequest();
         CouponCache couponCache = createCouponCache();
 
-        when(couponIssueApiService.requestGetCouponFromCache(couponId)).thenReturn(Optional.of(couponCache));
-        when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString()))
-                .thenReturn("COUPON_ISSUE_QUANTITY_EXCEEDED");
+        when(couponCacheService.getCoupon(couponId)).thenReturn(Optional.of(couponCache));
+        doThrow(new IssueCouponException(COUPON_ISSUE_QUANTITY_EXCEEDED))
+                .when(couponIssueCacheService)
+                .checkCouponIssueQuantityAndDuplicate(any(CouponCache.class), anyString());
 
-        // When & Then
-        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request, "1L"), COUPON_ISSUE_QUANTITY_EXCEEDED.name());
+        // When
+        IssueCouponException exception = assertThrows(
+                IssueCouponException.class,
+                () -> couponIssueService.issueCoupon(request, "1L")
+        );
+
+        // Then
+        assertEquals(COUPON_ISSUE_QUANTITY_EXCEEDED, exception.getErrorCode());
     }
+
 
     @Test
     @DisplayName("[ERROR] 사용자가 이미 쿠폰을 발급받은 경우 예외 발생")
@@ -101,12 +118,19 @@ class CouponIssueServiceTest {
         SaveCouponIssueRequest request = createRequest();
         CouponCache couponCache = createCouponCache();
 
-        when(couponIssueApiService.requestGetCouponFromCache(couponId)).thenReturn(Optional.of(couponCache));
-        when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString()))
-                .thenReturn("COUPON_ALREADY_ISSUED_BY_USER");
+        when(couponCacheService.getCoupon(couponId)).thenReturn(Optional.of(couponCache));
+        doThrow(new IssueCouponException(COUPON_ALREADY_ISSUED_BY_USER))
+                .when(couponIssueCacheService)
+                .checkCouponIssueQuantityAndDuplicate(any(CouponCache.class), anyString());
 
-        // When & Then
-        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request, "1L"), COUPON_ALREADY_ISSUED_BY_USER.name());
+        // When
+        IssueCouponException exception = assertThrows(
+                IssueCouponException.class,
+                () -> couponIssueService.issueCoupon(request, "1L")
+        );
+
+        // Then
+        assertEquals(COUPON_ALREADY_ISSUED_BY_USER, exception.getErrorCode());
     }
 
     @Test
@@ -116,15 +140,16 @@ class CouponIssueServiceTest {
         SaveCouponIssueRequest request = createRequest();
         Coupon coupon = createCoupon();
 
-        when(couponIssueApiService.requestGetCouponFromCache(couponId)).thenReturn(Optional.empty());
+        when(couponCacheService.getCoupon(couponId)).thenReturn(Optional.empty());
         when(couponIssueApiService.requestGetCouponFromDb(couponId)).thenReturn(Optional.of(coupon));
-        when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString())).thenReturn("SUCCESS");
+        doNothing().when(couponIssueCacheService).checkCouponIssueQuantityAndDuplicate(any(CouponCache.class), anyString());
 
         // When
         couponIssueService.issueCoupon(request, "1L");
 
         // Then
-        verify(couponIssueApiService).requestSaveCouponFromCache(any(CouponCache.class));
+        verify(couponCacheService).saveCoupon(any(CouponCache.class));
         verify(couponIssueRepository).save(any(CouponIssue.class));
+        verify(couponIssueCacheService).checkCouponIssueQuantityAndDuplicate(any(CouponCache.class), eq("1L"));
     }
 }
