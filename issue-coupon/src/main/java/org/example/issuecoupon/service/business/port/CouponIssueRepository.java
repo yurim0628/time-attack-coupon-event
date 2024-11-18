@@ -1,4 +1,4 @@
-package org.example.issuecoupon.service.port;
+package org.example.issuecoupon.service.business.port;
 
 import org.example.issuecoupon.domain.CouponIssue;
 

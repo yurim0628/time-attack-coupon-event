@@ -1,10 +1,10 @@
-package org.example.coupon.service;
+package org.example.coupon.service.business;
 
 import lombok.RequiredArgsConstructor;
 import org.example.coupon.domain.Coupon;
 import org.example.coupon.domain.GetCouponResponse;
 import org.example.coupon.exception.CouponException;
-import org.example.coupon.service.port.CouponRepository;
+import org.example.coupon.service.business.port.CouponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

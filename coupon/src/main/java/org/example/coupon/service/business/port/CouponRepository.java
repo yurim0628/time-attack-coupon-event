@@ -1,4 +1,4 @@
-package org.example.coupon.service.port;
+package org.example.coupon.service.business.port;
 
 import org.example.coupon.domain.Coupon;
 

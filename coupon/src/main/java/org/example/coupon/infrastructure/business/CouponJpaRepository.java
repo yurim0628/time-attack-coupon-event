@@ -1,6 +1,6 @@
-package org.example.coupon.infrastructure;
+package org.example.coupon.infrastructure.business;
 
-import org.example.coupon.infrastructure.entity.CouponEntity;
+import org.example.coupon.infrastructure.business.entity.CouponEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,4 +1,4 @@
-package org.example.issuecoupon.service;
+package org.example.issuecoupon.service.business;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,10 @@ import org.example.issuecoupon.domain.CouponCache;
 import org.example.issuecoupon.domain.CouponIssue;
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
 import org.example.issuecoupon.exception.IssueCouponException;
-import org.example.issuecoupon.service.port.CouponIssueRepository;
+import org.example.issuecoupon.service.business.port.CouponIssueRepository;
+import org.example.issuecoupon.service.api.CouponIssueApiService;
+import org.example.issuecoupon.service.cache.CouponIssueCacheService;
+import org.example.issuecoupon.service.cache.CouponCacheService;
 import org.springframework.stereotype.Service;
 
 import static org.example.issuecoupon.exception.ErrorCode.*;
@@ -19,6 +22,8 @@ import static org.example.issuecoupon.exception.ErrorCode.*;
 public class CouponIssueService {
 
     private final CouponIssueApiService couponIssueApiService;
+    private final CouponIssueCacheService couponIssueCacheService;
+    private final CouponCacheService couponCacheService;
     private final CouponIssueRepository couponIssueRepository;
 
     @Transactional
@@ -35,7 +40,7 @@ public class CouponIssueService {
 
     private CouponCache getCouponFromCache(Long couponId) {
         log.info("Getting Coupons from Cache. Coupon ID: [{}]", couponId);
-        return couponIssueApiService.requestGetCouponFromCache(couponId)
+        return couponCacheService.getCoupon(couponId)
                 .orElseGet(() -> getCouponFromDbAndCache(couponId));
     }
 
@@ -50,20 +55,14 @@ public class CouponIssueService {
                 coupon.getMaxQuantity(),
                 coupon.getEventId()
         );
-        couponIssueApiService.requestSaveCouponFromCache(couponCache);
+        couponCacheService.saveCoupon(couponCache);
 
         return couponCache;
     }
 
     private void validateCouponIssue(CouponCache cachedCoupon, String userId) {
         log.info("Validating Coupon Issue. Coupon ID: [{}], User ID: [{}]", cachedCoupon.getId(), userId);
-        String result = couponIssueApiService.requestCouponValidation(cachedCoupon, userId);
-
-        if ("COUPON_ISSUE_QUANTITY_EXCEEDED".equals(result)) {
-            throw new IssueCouponException(COUPON_ISSUE_QUANTITY_EXCEEDED);
-        } else if ("COUPON_ALREADY_ISSUED_BY_USER".equals(result)) {
-            throw new IssueCouponException(COUPON_ALREADY_ISSUED_BY_USER);
-        }
+        couponIssueCacheService.checkCouponIssueQuantityAndDuplicate(cachedCoupon, userId);
     }
 
     private void saveCouponIssue(Long couponId, String userId) {

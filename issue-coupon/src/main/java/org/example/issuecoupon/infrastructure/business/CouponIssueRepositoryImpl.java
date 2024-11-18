@@ -1,9 +1,9 @@
-package org.example.issuecoupon.infrastructure;
+package org.example.issuecoupon.infrastructure.business;
 
 import lombok.RequiredArgsConstructor;
 import org.example.issuecoupon.domain.CouponIssue;
-import org.example.issuecoupon.infrastructure.entity.CouponIssueEntity;
-import org.example.issuecoupon.service.port.CouponIssueRepository;
+import org.example.issuecoupon.infrastructure.business.entity.CouponIssueEntity;
+import org.example.issuecoupon.service.business.port.CouponIssueRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

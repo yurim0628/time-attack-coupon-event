@@ -1,4 +1,4 @@
-package org.example.coupon.infrastructure.entity;
+package org.example.coupon.infrastructure.business.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
