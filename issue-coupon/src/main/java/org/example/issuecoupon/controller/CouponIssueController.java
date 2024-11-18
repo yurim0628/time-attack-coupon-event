@@ -1,14 +1,11 @@
 package org.example.issuecoupon.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
-import org.example.issuecoupon.service.CouponIssueService;
+import org.example.issuecoupon.service.business.CouponIssueService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static org.example.issuecoupon.AccessTokenProvider.setAccessToken;
 
 @RestController
 @RequestMapping("/coupon-issues")
@@ -22,10 +19,8 @@ public class CouponIssueController {
     @PostMapping
     public ResponseEntity<Void> issueCoupon(
             @RequestBody @Valid SaveCouponIssueRequest saveCouponIssueRequest,
-            @RequestHeader(USER_ID_HEADER) String userId,
-            HttpServletRequest request
+            @RequestHeader(USER_ID_HEADER) String userId
     ) {
-        setAccessToken(request);
         couponIssueService.issueCoupon(saveCouponIssueRequest, userId);
         return ResponseEntity.ok().build();
     }
