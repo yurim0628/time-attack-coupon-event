@@ -2,6 +2,7 @@ package org.example.issuecoupon.service;
 
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
 import org.example.issuecoupon.exception.IssueCouponException;
+import org.example.issuecoupon.service.business.CouponIssueService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
