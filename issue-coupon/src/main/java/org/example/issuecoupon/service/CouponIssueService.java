@@ -22,13 +22,12 @@ public class CouponIssueService {
     private final CouponIssueRepository couponIssueRepository;
 
     @Transactional
-    public void issueCoupon(SaveCouponIssueRequest saveCouponIssueRequest) {
+    public void issueCoupon(SaveCouponIssueRequest saveCouponIssueRequest, String userId) {
         Long couponId = saveCouponIssueRequest.couponId();
-        Long userId = saveCouponIssueRequest.userId();
         log.info("Issuing Coupon. Coupon ID: [{}], User ID: [{}]", couponId, userId);
 
         CouponCache cachedCoupon = getCouponFromCache(couponId);
-        validateCouponIssue(cachedCoupon, String.valueOf(userId));
+        validateCouponIssue(cachedCoupon, userId);
 
         saveCouponIssue(couponId, userId);
         log.info("Coupon Issued Successfully. Coupon ID: [{}], User ID: [{}]", couponId, userId);
@@ -67,7 +66,7 @@ public class CouponIssueService {
         }
     }
 
-    private void saveCouponIssue(Long couponId, Long userId) {
+    private void saveCouponIssue(Long couponId, String userId) {
         log.info("Saving Coupon Issue. Coupon ID: [{}], User ID: [{}]", couponId, userId);
         CouponIssue couponIssue = CouponIssue.of(couponId, userId);
         couponIssueRepository.save(couponIssue);

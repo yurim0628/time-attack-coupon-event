@@ -21,11 +21,11 @@ public class CouponIssue {
         this.userId = userId;
     }
 
-    public static CouponIssue of(Long couponId, Long userId) {
+    public static CouponIssue of(Long couponId, String userId) {
         return CouponIssue.builder()
                 .couponStatus(ACTIVE)
                 .couponId(couponId)
-                .userId(userId)
+                .userId(Long.parseLong(userId))
                 .build();
     }
 }
