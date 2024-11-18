@@ -1,6 +1,6 @@
-package org.example.redis.service.port;
+package org.example.issuecoupon.service.cache.cache;
 
-import org.example.redis.domain.CouponCache;
+import org.example.issuecoupon.domain.CouponCache;
 
 import java.util.Optional;
 

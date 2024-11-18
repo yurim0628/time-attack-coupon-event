@@ -1,4 +1,4 @@
-package org.example.redis.utils;
+package org.example.issuecoupon.utils;
 
 import lombok.experimental.UtilityClass;
 

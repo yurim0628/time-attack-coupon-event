@@ -1,17 +1,18 @@
-package org.example.redis.infrastructure;
+package org.example.issuecoupon.infrastructure.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import io.lettuce.core.RedisException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.redis.exception.RedisException;
-import org.example.redis.infrastructure.vo.CouponRedisVO;
+import org.example.issuecoupon.exception.IssueCouponException;
+import org.example.issuecoupon.infrastructure.cache.vo.CouponRedisVO;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.example.redis.exception.RedisErrorCode.COMMON_SYSTEM_ERROR;
+import static org.example.issuecoupon.exception.ErrorCode.COMMON_SYSTEM_ERROR;
 
 @Slf4j
 @Component
@@ -32,6 +33,10 @@ public class CouponRedisCache {
     public Optional<CouponRedisVO> getCoupon(String key) {
         log.info("Find Redis Key = [{}]", key);
         String serializedValue = redisTemplate.opsForValue().get(key);
+        if (serializedValue == null) {
+            log.warn("Redis Key [{}] not found or value is null", key);
+            return Optional.empty();
+        }
         try {
             return Optional.of(objectMapper.readValue(serializedValue, CouponRedisVO.class));
         } catch (IllegalArgumentException | InvalidFormatException e) {
@@ -39,7 +44,7 @@ public class CouponRedisCache {
             return Optional.empty();
         } catch (Exception e) {
             log.error("Redis Get Exception for key [{}]", key, e);
-            throw new RedisException("Redis get() Error", COMMON_SYSTEM_ERROR);
+            throw new IssueCouponException("Redis get() Error", COMMON_SYSTEM_ERROR);
         }
     }
 
@@ -58,7 +63,7 @@ public class CouponRedisCache {
             redisTemplate.opsForValue().set(key, serializedValue);
         } catch (Exception e) {
             log.error("Redis Set Exception", e);
-            throw new RedisException("Redis set() Error", COMMON_SYSTEM_ERROR);
+            throw new IssueCouponException("Redis set() Error", COMMON_SYSTEM_ERROR);
         }
     }
 }

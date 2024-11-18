@@ -1,9 +1,9 @@
-package org.example.redis.infrastructure;
+package org.example.issuecoupon.infrastructure.cache;
 
 import lombok.RequiredArgsConstructor;
-import org.example.redis.domain.CouponCache;
-import org.example.redis.infrastructure.vo.CouponRedisVO;
-import org.example.redis.service.port.CouponCacheStore;
+import org.example.issuecoupon.domain.CouponCache;
+import org.example.issuecoupon.infrastructure.cache.vo.CouponRedisVO;
+import org.example.issuecoupon.service.cache.cache.CouponCacheStore;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

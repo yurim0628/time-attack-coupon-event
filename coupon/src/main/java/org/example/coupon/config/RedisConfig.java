@@ -1,4 +1,4 @@
-package org.example.redis.config;
+package org.example.coupon.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

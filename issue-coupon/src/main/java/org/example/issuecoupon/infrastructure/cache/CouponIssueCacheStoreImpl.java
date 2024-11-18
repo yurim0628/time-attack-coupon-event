@@ -1,7 +1,7 @@
-package org.example.redis.infrastructure;
+package org.example.issuecoupon.infrastructure.cache;
 
 import lombok.RequiredArgsConstructor;
-import org.example.redis.service.port.CouponIssueCacheStore;
+import org.example.issuecoupon.service.cache.cache.CouponIssueCacheStore;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,10 +13,5 @@ public class CouponIssueCacheStoreImpl implements CouponIssueCacheStore {
     @Override
     public Long checkCouponIssueAvailability(String couponIssueRequestKey, String maxQuantity, String userId) {
         return couponIssueRedisCache.checkCouponIssueAvailability(couponIssueRequestKey, maxQuantity, userId);
-    }
-
-    @Override
-    public Long getIssuedCouponUserCount(String issueRequestKey) {
-        return couponIssueRedisCache.getIssuedCouponUserCount(issueRequestKey);
     }
 }

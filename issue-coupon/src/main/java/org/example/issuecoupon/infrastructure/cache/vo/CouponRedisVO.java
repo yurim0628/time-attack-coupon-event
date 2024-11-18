@@ -1,8 +1,8 @@
-package org.example.redis.infrastructure.vo;
+package org.example.issuecoupon.infrastructure.cache.vo;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.redis.domain.CouponCache;
+import org.example.issuecoupon.domain.CouponCache;
 
 @Getter
 public class CouponRedisVO {
