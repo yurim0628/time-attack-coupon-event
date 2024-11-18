@@ -27,16 +27,14 @@ public class TokenAuthenticationFilter implements GlobalFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final int BEARER_PREFIX_LENGTH = BEARER_PREFIX.length();
     public static final String USER_ID_HEADER = "X-User-Id";
-
-    private static final String REGISTER_PATH = "/users/sign-up";
-    private static final String LOGIN_PATH = "/users/login";
+    private static final String COUPON_ISSUES_PATH = "/coupon-issues";
 
     private final TokenAuthenticationService tokenAuthenticationService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        if (List.of(REGISTER_PATH, LOGIN_PATH).contains(path)) {
+        if (!path.equals(COUPON_ISSUES_PATH)) {
             return chain.filter(exchange);
         }
 
