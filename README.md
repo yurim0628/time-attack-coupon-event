@@ -10,7 +10,7 @@
 - **주요 목표**:  
   - 높은 트래픽 상황에서도 안정적인 쿠폰 발급 시스템 제공
   - 비즈니스 로직을 명확히 분리하여 확장 가능하고 유연한 구조 설계
-- [API 명세서](https://www.notion.so/API-12736e800eeb8091a684e1ccd78be70e), [ERD 설계도](https://github.com/yurim0628/off-coupon/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EC%9C%A0%EC%A0%80-%ED%94%8C%EB%A1%9C%EC%9A%B0)
+- [API 명세서](https://www.notion.so/API-12736e800eeb8091a684e1ccd78be70e), [데이터베이스 설계 및 유저플로우](https://github.com/yurim0628/off-coupon/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EC%9C%A0%EC%A0%80-%ED%94%8C%EB%A1%9C%EC%9A%B0)
 
 ## ⚙️ 기술 스택
 <img width="987" alt="image" src="https://github.com/user-attachments/assets/1b4fe537-3342-461a-8b62-d094d629b9b8">
