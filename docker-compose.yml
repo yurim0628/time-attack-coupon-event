@@ -40,7 +40,7 @@ services:
     image: gateway-server-image
     container_name: gateway-server-module-container
     ports:
-      - "8085:8080"
+      - "8080:8080"
     environment:
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
     networks:
@@ -73,10 +73,13 @@ services:
       - "8082:8080"
     depends_on:
       - mysql
+      - redis
       - config-server-module
       - eureka-server-module
       - gateway-server-module
     environment:
+      SPRING_REDIS_HOST: redis-container
+      SPRING_REDIS_PORT: 6379
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root1234!!
@@ -93,25 +96,6 @@ services:
       - "8083:8080"
     depends_on:
       - mysql
-      - config-server-module
-      - eureka-server-module
-      - gateway-server-module
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root1234!!
-      EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
-      SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
-      SPRING_PROFILES_ACTIVE: prod
-    networks:
-      - off-coupon-network
-
-  redis-module:
-    image: redis-image
-    container_name: redis-module-container
-    ports:
-      - "8084:8080"
-    depends_on:
       - redis
       - config-server-module
       - eureka-server-module
@@ -119,6 +103,9 @@ services:
     environment:
       SPRING_REDIS_HOST: redis-container
       SPRING_REDIS_PORT: 6379
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/sparta
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root1234!!
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
       SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
       SPRING_PROFILES_ACTIVE: prod
