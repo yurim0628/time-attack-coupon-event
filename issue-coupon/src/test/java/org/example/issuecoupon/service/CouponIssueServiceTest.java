@@ -38,7 +38,7 @@ class CouponIssueServiceTest {
     private CouponIssueService couponIssueService;
 
     private SaveCouponIssueRequest createRequest() {
-        return new SaveCouponIssueRequest(userId, eventId, couponId);
+        return new SaveCouponIssueRequest(eventId, couponId);
     }
 
     private CouponCache createCouponCache() {
@@ -73,7 +73,7 @@ class CouponIssueServiceTest {
         when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString())).thenReturn("SUCCESS");
 
         // When
-        couponIssueService.issueCoupon(request);
+        couponIssueService.issueCoupon(request, "1L");
 
         // Then
         verify(couponIssueRepository).save(any(CouponIssue.class));
@@ -91,7 +91,7 @@ class CouponIssueServiceTest {
                 .thenReturn("COUPON_ISSUE_QUANTITY_EXCEEDED");
 
         // When & Then
-        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request), COUPON_ISSUE_QUANTITY_EXCEEDED.name());
+        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request, "1L"), COUPON_ISSUE_QUANTITY_EXCEEDED.name());
     }
 
     @Test
@@ -106,7 +106,7 @@ class CouponIssueServiceTest {
                 .thenReturn("COUPON_ALREADY_ISSUED_BY_USER");
 
         // When & Then
-        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request), COUPON_ALREADY_ISSUED_BY_USER.name());
+        assertThrows(IssueCouponException.class, () -> couponIssueService.issueCoupon(request, "1L"), COUPON_ALREADY_ISSUED_BY_USER.name());
     }
 
     @Test
@@ -121,7 +121,7 @@ class CouponIssueServiceTest {
         when(couponIssueApiService.requestCouponValidation(any(CouponCache.class), anyString())).thenReturn("SUCCESS");
 
         // When
-        couponIssueService.issueCoupon(request);
+        couponIssueService.issueCoupon(request, "1L");
 
         // Then
         verify(couponIssueApiService).requestSaveCouponFromCache(any(CouponCache.class));

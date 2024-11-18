@@ -31,8 +31,8 @@ public class CouponIssueConcurrencyTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    SaveCouponIssueRequest saveCouponIssueRequest = new SaveCouponIssueRequest(userId, 1L, 1L);
-                    couponIssueService.issueCoupon(saveCouponIssueRequest);
+                    SaveCouponIssueRequest saveCouponIssueRequest = new SaveCouponIssueRequest(1L, 1L);
+                    couponIssueService.issueCoupon(saveCouponIssueRequest, "1L");
                     successCount.incrementAndGet();
                 } catch (IssueCouponException e) {
                     failCount.incrementAndGet();
