@@ -67,7 +67,7 @@
 - [쿠폰 재고에 대한 동기화 전략: Wirte-Back 패턴](https://github.com/yurim0628/off-coupon/wiki/%EC%84%A0%EC%B0%A9%EC%88%9C-%EC%BF%A0%ED%8F%B0-%EB%B0%9C%EA%B8%89-%EC%84%9C%EB%B9%84%EC%8A%A4%EC%97%90%EC%84%9C-%EC%BA%90%EC%8B%9C%EC%99%80-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EA%B0%84-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5#2-%EC%BF%A0%ED%8F%B0-%EC%9E%AC%EA%B3%A0%EC%97%90-%EB%8C%80%ED%95%9C-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5)
 
 ##  🚨 장애 복구 시스템 구축
-- [Redis Sentinel로 고가용성 및 페일오버 구축(1) - 기술적 의사결정]()
+- [Redis Sentinel로 고가용성 및 페일오버 구축(1) - 기술적 의사결정](https://github.com/yurim0628/off-coupon/wiki/Redis-Sentinel%EB%A1%9C-%EA%B3%A0%EA%B0%80%EC%9A%A9%EC%84%B1-%EB%B0%8F-%ED%8E%98%EC%9D%BC%EC%98%A4%EB%B2%84-%EA%B5%AC%EC%B6%95(1)-%E2%80%90-%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95)
 - [Redis Sentinel로 고가용성 및 페일오버 구축(2) - 기능 구현](https://github.com/yurim0628/off-coupon/wiki/Redis-Sentinel%EB%A1%9C-%EA%B3%A0%EA%B0%80%EC%9A%A9%EC%84%B1-%EB%B0%8F-%EC%9E%90%EB%8F%99-%ED%8E%98%EC%9D%BC%EC%98%A4%EB%B2%84-%EA%B5%AC%EC%B6%95(2)-%E2%80%90-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84)
 
 ## 🔒 동시성 테스트
