@@ -1,10 +1,10 @@
-package org.example.issuecoupon.infrastructure.business.entity;
+package org.example.couponkafka.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.issuecoupon.domain.CouponIssue;
-import org.example.issuecoupon.domain.CouponStatus;
+import org.example.couponkafka.domain.CouponIssue;
+import org.example.couponkafka.domain.CouponStatus;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
