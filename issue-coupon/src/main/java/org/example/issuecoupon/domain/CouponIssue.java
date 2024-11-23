@@ -2,16 +2,18 @@ package org.example.issuecoupon.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static org.example.issuecoupon.domain.CouponStatus.ACTIVE;
 
 @Getter
+@NoArgsConstructor
 public class CouponIssue {
 
-    private final Long id;
-    private final CouponStatus couponStatus;
-    private final Long couponId;
-    private final Long userId;
+    private Long id;
+    private CouponStatus couponStatus;
+    private Long couponId;
+    private Long userId;
 
     @Builder
     private CouponIssue(Long id, CouponStatus couponStatus, Long couponId, Long userId) {
