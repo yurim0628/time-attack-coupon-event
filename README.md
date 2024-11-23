@@ -54,20 +54,52 @@
 
 ### 주요 로직
 1. **쿠폰 정보 조회**
-  - Look-Aside + Write Around 패턴을 사용하여 처음 조회 시 DB에서 쿠폰 정보를 가져와 Redis에 캐싱하고 이후에는 Redis에서 빠르게 조회.
+- Look-Aside + Write Around 패턴을 사용하여 처음 조회 시 DB에서 쿠폰 정보를 가져와 Redis에 캐싱하고 이후에는 Redis에서 빠르게 조회.
 2. **쿠폰 발급 검증**
-  - Redis의 `SCARD`로 현재 발급된 쿠폰 수를 확인하고, `SISMEMBER`로 사용자가 이미 발급받았는지 확인한 뒤, `SADD`로 사용자 정보를 추가.
-  - Lua 스크립트를 활용해 모든 작업을 하나의 원자적 명령으로 처리하며 Redis의 단일 스레드 환경을 이용해 작업 간 충돌과 동시성 문제를 방지.
+- Redis의 `SCARD`로 현재 발급된 쿠폰 수를 확인하고, `SISMEMBER`로 사용자가 이미 발급받았는지 확인한 뒤, `SADD`로 사용자 정보를 추가.
+- Lua 스크립트를 활용해 모든 작업을 하나의 원자적 명령으로 처리하며 Redis의 단일 스레드 환경을 이용해 작업 간 충돌과 동시성 문제를 방지.
 3. **쿠폰 발급**
-  - 쿠폰 발급 요청 시 쿠폰 발급 수량 및 중복 발급 여부를 검증하여 검증 통과 시 사용자에게 즉시 결과를 반환.
-  - 검증된 요청은 Kafka로 전송되며, Consumer가 병렬로 처리해 DB에 비동기적으로 저장.
+- 쿠폰 발급 요청 시 쿠폰 발급 수량 및 중복 발급 여부를 검증하여 검증 통과 시 사용자에게 즉시 결과를 반환.
+- 검증된 요청은 Kafka로 전송되며, Consumer가 병렬로 처리해 DB에 비동기적으로 저장.
+
+## 📈 성능 개선 및 부하 테스트 결과
+### 문제 상황
+- 선착순 이벤트에서 짧은 시간 내 다수의 사용자가 쿠폰 지급 요청 전송
+- INSERT 작업이 집중되면서 DB에 부하가 발생
+
+### 테스트 목표
+- 대규모 트래픽 상황에서 선착순 쿠폰 지급 시스템의 성능 및 안정성 확인
+- DB 부하를 최소화하고 평균 응답 시간 단축 및 시스템 안정성 강화
+
+### 테스트 환경 및 설정
+- 테스트 도구: Apache JMeter
+- 테스트 구성
+  - Number of Threads (Users): 15,000
+  - Ramp-up Period (Seconds): 20
+  - Loop Count: 1
+- 테스트 수행 상황
+  - 동시 요청 수: 약 2,500대에서 안정적으로 유지
+  - 테스트 수행 시간: 총 약 17초 소요
+
+### 구조 설계
+![image](https://github.com/user-attachments/assets/7b3f0eea-c8a9-4e32-b348-32a4cf571de0)
+
+### 성능 비교 결과
+| **구분**         | **평균 응답 시간 (ms)** | **최대 응답 시간 (ms)** | **표준 편차 (ms)** | **처리량 (req/sec)** |
+|----------------|-------------------------|-------------------------|-------------------|----------------------|
+| **Kafka 도입 전** | 98                      | 1708                   | 202.03            | 940.44               |
+| **Kafka 도입 후**       | 26                      | 1090                   | 28.01             | 944.41               |
+- 응답 속도 단축: 평균 응답 시간 98ms → 26ms, 최대 응답 시간 1708ms → 1090ms로 단축.
+- 처리량 증가: 초당 처리량 940 req/sec → 944 req/sec로 증가, 대량 트래픽 안정적 처리.
+- 일관성 있는 처리: 처리 시간 변동 폭 감소(표준 편차 202ms → 28ms)로 안정성 향상.
+
 
 ## 🎯 캐싱 전략
 - [쿠폰 정보에 대한 동기화 전략: Look-Aside + Wirte-Around 패턴](https://github.com/yurim0628/off-coupon/wiki/%EC%84%A0%EC%B0%A9%EC%88%9C-%EC%BF%A0%ED%8F%B0-%EB%B0%9C%EA%B8%89-%EC%84%9C%EB%B9%84%EC%8A%A4%EC%97%90%EC%84%9C-%EC%BA%90%EC%8B%9C%EC%99%80-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EA%B0%84-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5#1-%EC%BF%A0%ED%8F%B0-%EC%A0%95%EB%B3%B4%EC%97%90-%EB%8C%80%ED%95%9C-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5)
 - [쿠폰 재고에 대한 동기화 전략: Wirte-Back 패턴](https://github.com/yurim0628/off-coupon/wiki/%EC%84%A0%EC%B0%A9%EC%88%9C-%EC%BF%A0%ED%8F%B0-%EB%B0%9C%EA%B8%89-%EC%84%9C%EB%B9%84%EC%8A%A4%EC%97%90%EC%84%9C-%EC%BA%90%EC%8B%9C%EC%99%80-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EA%B0%84-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5#2-%EC%BF%A0%ED%8F%B0-%EC%9E%AC%EA%B3%A0%EC%97%90-%EB%8C%80%ED%95%9C-%EB%8F%99%EA%B8%B0%ED%99%94-%EC%A0%84%EB%9E%B5)
 
 ##  🚨 장애 복구 시스템 구축
-- [Redis Sentinel로 고가용성 및 페일오버 구축(1) - 기술적 의사결정]()
+- [Redis Sentinel로 고가용성 및 페일오버 구축(1) - 기술적 의사결정](https://github.com/yurim0628/off-coupon/wiki/Redis-Sentinel%EB%A1%9C-%EA%B3%A0%EA%B0%80%EC%9A%A9%EC%84%B1-%EB%B0%8F-%ED%8E%98%EC%9D%BC%EC%98%A4%EB%B2%84-%EA%B5%AC%EC%B6%95(1)-%E2%80%90-%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95)
 - [Redis Sentinel로 고가용성 및 페일오버 구축(2) - 기능 구현](https://github.com/yurim0628/off-coupon/wiki/Redis-Sentinel%EB%A1%9C-%EA%B3%A0%EA%B0%80%EC%9A%A9%EC%84%B1-%EB%B0%8F-%EC%9E%90%EB%8F%99-%ED%8E%98%EC%9D%BC%EC%98%A4%EB%B2%84-%EA%B5%AC%EC%B6%95(2)-%E2%80%90-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84)
 
 ## 🔒 동시성 테스트
