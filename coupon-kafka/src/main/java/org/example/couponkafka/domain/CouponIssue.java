@@ -1,10 +1,8 @@
-package org.example.issuecoupon.domain;
+package org.example.couponkafka.domain;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static org.example.issuecoupon.domain.CouponStatus.ACTIVE;
 
 @Getter
 @NoArgsConstructor
@@ -21,13 +19,5 @@ public class CouponIssue {
         this.couponStatus = couponStatus;
         this.couponId = couponId;
         this.userId = userId;
-    }
-
-    public static CouponIssue of(Long couponId, String userId) {
-        return CouponIssue.builder()
-                .couponStatus(ACTIVE)
-                .couponId(couponId)
-                .userId(Long.parseLong(userId))
-                .build();
     }
 }
