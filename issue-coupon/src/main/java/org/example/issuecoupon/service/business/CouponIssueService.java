@@ -68,6 +68,6 @@ public class CouponIssueService {
     private void saveCouponIssue(Long couponId, String userId) {
         log.info("Saving Coupon Issue. Coupon ID: [{}], User ID: [{}]", couponId, userId);
         CouponIssue couponIssue = CouponIssue.of(couponId, userId);
-        kafkaTemplate.send("topic", couponIssue);
+        kafkaTemplate.send("TimeAttackCouponIssue", couponIssue);
     }
 }

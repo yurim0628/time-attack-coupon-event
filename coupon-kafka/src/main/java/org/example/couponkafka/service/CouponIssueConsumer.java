@@ -12,7 +12,7 @@ public class CouponIssueConsumer {
 
     private final CouponIssueRepository couponIssueRepository;
 
-    @KafkaListener(topics = "topic", groupId = "coupon_issue_consumer_group")
+    @KafkaListener(topics = "TimeAttackCouponIssue", groupId = "Coupon-TimeAttackCouponIssue")
     public void listener(CouponIssue couponIssue) {
         saveCouponIssue(couponIssue);
     }
