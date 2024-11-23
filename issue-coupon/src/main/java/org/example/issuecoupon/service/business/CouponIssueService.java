@@ -8,13 +8,13 @@ import org.example.issuecoupon.domain.CouponCache;
 import org.example.issuecoupon.domain.CouponIssue;
 import org.example.issuecoupon.domain.dto.SaveCouponIssueRequest;
 import org.example.issuecoupon.exception.IssueCouponException;
-import org.example.issuecoupon.service.business.port.CouponIssueRepository;
 import org.example.issuecoupon.service.api.CouponIssueApiService;
-import org.example.issuecoupon.service.cache.CouponIssueCacheService;
 import org.example.issuecoupon.service.cache.CouponCacheService;
+import org.example.issuecoupon.service.cache.CouponIssueCacheService;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import static org.example.issuecoupon.exception.ErrorCode.*;
+import static org.example.issuecoupon.exception.ErrorCode.COUPON_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -24,7 +24,7 @@ public class CouponIssueService {
     private final CouponIssueApiService couponIssueApiService;
     private final CouponIssueCacheService couponIssueCacheService;
     private final CouponCacheService couponCacheService;
-    private final CouponIssueRepository couponIssueRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Transactional
     public void issueCoupon(SaveCouponIssueRequest saveCouponIssueRequest, String userId) {
@@ -68,6 +68,6 @@ public class CouponIssueService {
     private void saveCouponIssue(Long couponId, String userId) {
         log.info("Saving Coupon Issue. Coupon ID: [{}], User ID: [{}]", couponId, userId);
         CouponIssue couponIssue = CouponIssue.of(couponId, userId);
-        couponIssueRepository.save(couponIssue);
+        kafkaTemplate.send("topic", couponIssue);
     }
 }
