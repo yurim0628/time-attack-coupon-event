@@ -32,18 +32,26 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.producer.compression-type}")
     private String compressionType;
 
+    @Value("${spring.kafka.producer.acks}")
+    private String acks;
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> producerConfig = new HashMap<>();
+
+        // Messaging behavior-related configurations
         producerConfig.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         producerConfig.put(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerConfig.put(VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
+        // Batch and compression-related configurations
         producerConfig.put(BATCH_SIZE_CONFIG, batchSize);
         producerConfig.put(LINGER_MS_CONFIG, lingerMs);
         producerConfig.put(BUFFER_MEMORY_CONFIG, bufferMemory);
-
         producerConfig.put(COMPRESSION_TYPE_CONFIG, compressionType);
+
+        // Reliability-related configurations
+        producerConfig.put(ACKS_CONFIG, acks);
 
         return new DefaultKafkaProducerFactory<>(producerConfig);
     }
