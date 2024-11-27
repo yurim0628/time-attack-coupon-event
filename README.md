@@ -118,4 +118,4 @@
 
 ## 🛠️ 분산 아키텍처
 - [Kafka를 활용해 검증 서비스와 발행 서비스 분리](https://github.com/yurim0628/off-coupon/wiki/Kafka%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%B4-%EA%B2%80%EC%A6%9D-%EC%84%9C%EB%B9%84%EC%8A%A4%EC%99%80-%EB%B0%9C%ED%96%89-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B6%84%EB%A6%AC%ED%95%98%EA%B8%B0)
-- [Kafka Producer: Accumulator에서 배치와 대기 시간을 조정을 통한 효율성 극대화](https://github.com/yurim0628/off-coupon/wiki/Kafka-Producer:-Accumulator%EC%97%90%EC%84%9C-%EB%B0%B0%EC%B9%98%EC%99%80-%EB%8C%80%EA%B8%B0-%EC%8B%9C%EA%B0%84%EC%9D%84-%EC%A1%B0%EC%A0%95%EC%9D%84-%ED%86%B5%ED%95%9C-%ED%9A%A8%EC%9C%A8%EC%84%B1-%EA%B7%B9%EB%8C%80%ED%99%94)
+- [[Kafka] Producer Configurations(1) ‐ Compression & Batch](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Producer-Configurations(1)-%E2%80%90-%08Compression-&-Batch)
