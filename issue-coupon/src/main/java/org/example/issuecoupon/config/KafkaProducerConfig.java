@@ -29,6 +29,9 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.producer.buffer-memory}")
     private int bufferMemory;
 
+    @Value("${spring.kafka.producer.compression-type}")
+    private String compressionType;
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> producerConfig = new HashMap<>();
@@ -39,6 +42,8 @@ public class KafkaProducerConfig {
         producerConfig.put(BATCH_SIZE_CONFIG, batchSize);
         producerConfig.put(LINGER_MS_CONFIG, lingerMs);
         producerConfig.put(BUFFER_MEMORY_CONFIG, bufferMemory);
+
+        producerConfig.put(COMPRESSION_TYPE_CONFIG, compressionType);
 
         return new DefaultKafkaProducerFactory<>(producerConfig);
     }
