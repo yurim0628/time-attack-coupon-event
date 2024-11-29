@@ -35,6 +35,15 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.producer.acks}")
     private String acks;
 
+    @Value("${spring.kafka.producer.properties.enable.idempotence}")
+    private boolean enableIdempotence;
+
+    @Value("${spring.kafka.producer.retries}")
+    private int retries;
+
+    @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
+    private int maxInflightRequests;
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> producerConfig = new HashMap<>();
@@ -52,6 +61,9 @@ public class KafkaProducerConfig {
 
         // Reliability-related configurations
         producerConfig.put(ACKS_CONFIG, acks);
+        producerConfig.put(RETRIES_CONFIG, retries);
+        producerConfig.put(ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
+        producerConfig.put(MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInflightRequests);
 
         return new DefaultKafkaProducerFactory<>(producerConfig);
     }
