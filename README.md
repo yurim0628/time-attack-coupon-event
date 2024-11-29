@@ -120,3 +120,5 @@
 - [Kafka를 활용해 검증 서비스와 발행 서비스 분리](https://github.com/yurim0628/off-coupon/wiki/Kafka%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%B4-%EA%B2%80%EC%A6%9D-%EC%84%9C%EB%B9%84%EC%8A%A4%EC%99%80-%EB%B0%9C%ED%96%89-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B6%84%EB%A6%AC%ED%95%98%EA%B8%B0)
 - [[Kafka] Producer Configurations(1) ‐ Compression & Batch](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Producer-Configurations(1)-%E2%80%90-%08Compression-&-Batch)
 - [[Kafka] Producer Configurations(2) ‐ Acks & Minimum In‐Sync Replicas](https://github.com/yurim0628/off-coupon/wiki/%5Bkafka%5D-Kafka-Producer-Configurations(2)-%E2%80%90-Acks-&-Minimum-In%E2%80%90Sync-Replicas)
+- [[Kafka] Producer Configurations(3) - Idempotence](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Producer-Configurations(3)-%E2%80%90-Idempotence)
+
