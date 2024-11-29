@@ -83,7 +83,7 @@
   - Number of Threads (Users): 15,000
   - Ramp-up Period (Seconds): 20
   - Loop Count: 1
-- JWT 관련 사전 설정
+- JWT 관련 사전 설정
   - 동일 사용자의 중복 요청을 차단하기 위해 JWT를 사전에 생성
   - 생성된 JWT 토큰을 CSV 파일로 저장하여 Apache JMeter의 CSV Data Set Config를 통해 로드
   - 이러한 방식으로 요청 검증 로직을 포함한 실사용 환경과 동일한 조건에서 테스트를 수행하며, 시스템의 부하를 보다 정확하게 측정
