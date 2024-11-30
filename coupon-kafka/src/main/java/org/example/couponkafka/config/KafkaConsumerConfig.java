@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
+import static org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE;
 import static org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS;
 import static org.springframework.kafka.support.serializer.ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS;
 import static org.springframework.kafka.support.serializer.JsonDeserializer.TRUSTED_PACKAGES;
@@ -32,6 +33,12 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.trusted-packages}")
     private String trustedPackages;
 
+    @Value("${spring.kafka.consumer.enable-auto-commit}")
+    private boolean enableAutoCommit;
+
+    @Value("${spring.kafka.consumer.auto-offset-reset}")
+    private String autoOffsetReset;
+
     @Bean
     public DefaultKafkaConsumerFactory<String, CouponIssue> consumerFactory() {
         Map<String, Object> consumerConfig = new HashMap<>();
@@ -45,6 +52,9 @@ public class KafkaConsumerConfig {
 
         consumerConfig.put(TRUSTED_PACKAGES, trustedPackages);
 
+        consumerConfig.put(ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
+        consumerConfig.put(AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfig,
                 new StringDeserializer(),
@@ -55,6 +65,7 @@ public class KafkaConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, CouponIssue> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CouponIssue> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.getContainerProperties().setAckMode(MANUAL_IMMEDIATE);
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
