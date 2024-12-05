@@ -23,6 +23,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_CREATE_TOPICS: "TimeAttackCouponIssue.DLT:1:3"
     networks:
       - off-coupon-network
 
@@ -38,6 +39,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_CREATE_TOPICS: "TimeAttackCouponIssue.DLT:1:3"
     networks:
       - off-coupon-network
 
@@ -53,6 +55,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_CREATE_TOPICS: "TimeAttackCouponIssue.DLT:1:3"
     networks:
       - off-coupon-network
 
