@@ -122,3 +122,4 @@
 - [[Kafka] Producer Configurations(2) ‐ Acks & Minimum In‐Sync Replicas](https://github.com/yurim0628/off-coupon/wiki/%5Bkafka%5D-Kafka-Producer-Configurations(2)-%E2%80%90-Acks-&-Minimum-In%E2%80%90Sync-Replicas)
 - [[Kafka] Producer Configurations(3) - Idempotence](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Producer-Configurations(3)-%E2%80%90-Idempotence)
 - [[Kafka] Consumer Configurations(1) - Offset Commit Strategy](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Consumer-Configurations(1)-%E2%80%90-Offset-Commit-Strategy)
+- [[Kafka] Consumer Configurations(2) - Retry & DLT](https://github.com/yurim0628/time-attack-coupon-event/wiki/%5BKafka%5D-Consumer-Configurations(2)-%E2%80%90-Retry-&-Dead-Letter-Topic(DLT))
