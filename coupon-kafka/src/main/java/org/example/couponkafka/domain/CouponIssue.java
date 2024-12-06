@@ -3,9 +3,11 @@ package org.example.couponkafka.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@ToString(exclude = {"id", "couponStatus"})
 public class CouponIssue {
 
     private Long id;
