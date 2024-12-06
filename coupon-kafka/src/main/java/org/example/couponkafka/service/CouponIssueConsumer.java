@@ -24,8 +24,7 @@ public class CouponIssueConsumer {
             saveCouponIssue(couponIssue);
             acknowledgment.acknowledge();
         } catch (Exception e) {
-            log.error("Failed to Save CouponIssue: [{}]", couponIssue, e);
-            throw new RuntimeException("Message Processing Failed", e);
+            throw new RuntimeException("Failed to Save CouponIssue. User ID: " + couponIssue.getUserId(), e);
         }
     }
 
