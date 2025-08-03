@@ -6,6 +6,7 @@ plugins {
 
 ext {
 	springCloudVersion = "2023.0.3"
+	micrometerVersion = "1.11.4"
 }
 
 group = 'org.example'
@@ -29,6 +30,13 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+	implementation 'io.micrometer:micrometer-tracing'
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+	implementation 'io.zipkin.brave:brave-instrumentation-spring-web'
+	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
