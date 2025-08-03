@@ -15,8 +15,7 @@ public class DltMessageHandler {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void handleDltMessage(ConsumerRecord<String, CouponIssue> record) {
-        log.info("Starting DLT Message Processing. Consumer Record: [{}]", record);
-        kafkaTemplate.send("TimeAttackCouponIssue", record.value());
-        log.info("Completed DLT Message Processing. CouponIssue Sent: [{}]", record.value());
+        log.error("Starting DLT Message Processing. Consumer Record: [{}]", record);
+        log.error("Completed DLT Message Processing. CouponIssue Sent: [{}]", record.value());
     }
 }
