@@ -14,6 +14,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.micrometer.KafkaListenerObservation;
+import org.springframework.kafka.support.micrometer.KafkaTemplateObservation;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -77,6 +79,10 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, CouponIssue> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.getContainerProperties().setAckMode(MANUAL_IMMEDIATE);
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setObservationEnabled(true);
+        factory.getContainerProperties().setObservationConvention(
+                KafkaListenerObservation.DefaultKafkaListenerObservationConvention.INSTANCE
+        );
         return factory;
     }
 
@@ -93,6 +99,11 @@ public class KafkaConsumerConfig {
 
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+        KafkaTemplate<String, Object> kafkaTemplate = new KafkaTemplate<>(producerFactory());
+        kafkaTemplate.setObservationEnabled(true);
+        kafkaTemplate.setObservationConvention(
+                KafkaTemplateObservation.DefaultKafkaTemplateObservationConvention.INSTANCE
+        );
+        return kafkaTemplate;
     }
 }
