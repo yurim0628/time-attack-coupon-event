@@ -127,3 +127,6 @@
 - [[Kafka] Producer Configurations(3) - Idempotence](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Producer-Configurations(3)-%E2%80%90-Idempotence)
 - [[Kafka] Consumer Configurations(1) - Offset Commit Strategy](https://github.com/yurim0628/off-coupon/wiki/%5BKafka%5D-Consumer-Configurations(1)-%E2%80%90-Offset-Commit-Strategy)
 - [[Kafka] Consumer Configurations(2) - Retry & DLT](https://github.com/yurim0628/time-attack-coupon-event/wiki/%5BKafka%5D-Consumer-Configurations(2)-%E2%80%90-Retry-&-Dead-Letter-Topic(DLT))
+
+## 🔍 로그 중심 분산 추적 시스템 구축
+- [분산 추적 기반의 로그 흐름 수집 및 분석 체계 도입을 통한 관찰 가능성(Observability) 수준 향상](https://github.com/yurim0628/time-attack-coupon-event/wiki/%EB%B6%84%EC%82%B0-%EC%B6%94%EC%A0%81-%EA%B8%B0%EB%B0%98%EC%9D%98-%EB%A1%9C%EA%B7%B8-%ED%9D%90%EB%A6%84-%EC%88%98%EC%A7%91-%EB%B0%8F-%EB%B6%84%EC%84%9D-%EC%B2%B4%EA%B3%84-%EB%8F%84%EC%9E%85%EC%9D%84-%ED%86%B5%ED%95%9C-%EA%B4%80%EC%B0%B0-%EA%B0%80%EB%8A%A5%EC%84%B1(Observability)-%EC%88%98%EC%A4%80-%ED%96%A5%EC%83%81)
