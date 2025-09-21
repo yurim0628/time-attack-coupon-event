@@ -1,0 +1,42 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki_container:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: user
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: user
+          __path__: /var/log/user/*.log
+
+  - job_name: coupon
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: coupon
+          __path__: /var/log/coupon/*.log
+
+  - job_name: issue-coupon
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: issue-coupon
+          __path__: /var/log/issue-coupon/*.log
+
+  - job_name: coupon-kafka
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: coupon-kafka
+          __path__: /var/log/coupon-kafka/*.log

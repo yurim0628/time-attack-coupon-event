@@ -69,6 +69,48 @@ services:
     networks:
       - off-coupon-network
 
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki_container
+    ports:
+      - "3100:3100"
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - /Users/yurimjeon/wal:/wal
+      - /Users/yurimjeon/loki/index:/loki/index
+      - /Users/yurimjeon/loki/cache:/loki/cache
+      - /Users/yurimjeon/loki/chunks:/loki/chunks
+      - /Users/yurimjeon/loki/compactor:/loki/compactor
+    user: "10001:10001"
+    networks:
+      - off-coupon-network
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail_container
+    volumes:
+      - ./logs/user:/var/log/user:ro
+      - ./logs/coupon:/var/log/coupon:ro
+      - ./logs/issue-coupon:/var/log/issue-coupon:ro
+      - ./logs/coupon-kafka:/var/log/coupon-kafka:ro
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+    networks:
+      - off-coupon-network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter_container
+    ports:
+      - "9100:9100"
+    restart: always
+    networks:
+      - off-coupon-network
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus_container
@@ -76,6 +118,25 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - kafka-exporter
+      - node-exporter
+    networks:
+      - off-coupon-network
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    ports:
+      - "3200:3200"
+      - "9411:9411"
+      - "4317:4317"
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+      - ./tempo-data/blocks:/var/tempo/blocks
+      - ./tempo-data/wal:/var/tempo/wal
+      - ./tempo-data/generator:/var/tempo/generator
+    command: -config.file=/etc/tempo.yaml
     networks:
       - off-coupon-network
 
@@ -84,6 +145,10 @@ services:
     container_name: grafana_container
     ports:
       - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
     networks:
       - off-coupon-network
 
@@ -202,6 +267,8 @@ services:
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
       SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
       SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - ./logs/user:/var/log/user
     networks:
       - off-coupon-network
 
@@ -224,6 +291,8 @@ services:
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
       SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
       SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - ./logs/coupon:/var/log/coupon
     networks:
       - off-coupon-network
 
@@ -251,6 +320,8 @@ services:
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
       SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
       SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - ./logs/issue-coupon:/var/log/issue-coupon
     networks:
       - off-coupon-network
 
@@ -276,6 +347,8 @@ services:
       EUREKA_SERVER_URI: http://admin:1234@eureka-server-module-container:8761/eureka/
       SPRING_CONFIG_IMPORT: "optional:configserver:http://admin:1234@config-server-module-container:9000"
       SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - ./logs/coupon-kafka:/var/log/coupon-kafka
     networks:
       - off-coupon-network
 
