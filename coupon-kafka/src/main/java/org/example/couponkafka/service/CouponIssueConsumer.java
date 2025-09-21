@@ -7,6 +7,7 @@ import org.example.couponkafka.service.port.CouponIssueRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -19,8 +20,10 @@ public class CouponIssueConsumer {
             topics = "TimeAttackCouponIssue",
             groupId = "Coupon-TimeAttackCouponIssue"
     )
+    @Transactional
     public void listener(CouponIssue couponIssue, Acknowledgment acknowledgment) {
         try {
+            log.info("Received CouponIssue for User ID: [{}]", couponIssue.getUserId());
             saveCouponIssue(couponIssue);
             acknowledgment.acknowledge();
         } catch (Exception e) {
