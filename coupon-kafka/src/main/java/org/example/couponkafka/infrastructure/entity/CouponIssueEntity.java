@@ -50,6 +50,7 @@ public class CouponIssueEntity {
                 .id(id)
                 .couponStatus(status)
                 .couponId(couponId)
+                .userId(userId)
                 .build();
     }
 }
