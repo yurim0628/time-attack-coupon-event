@@ -12,7 +12,18 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Entity
-@Table(name = "coupon_issues")
+@Table(
+        name = "coupon_issues",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_user_coupon",
+                        columnNames = {
+                                "userId",
+                                "couponId"
+                        }
+                )
+        }
+)
 @NoArgsConstructor(access = PROTECTED)
 public class CouponIssueEntity {
 
@@ -39,6 +50,7 @@ public class CouponIssueEntity {
                 .id(id)
                 .couponStatus(status)
                 .couponId(couponId)
+                .userId(userId)
                 .build();
     }
 }

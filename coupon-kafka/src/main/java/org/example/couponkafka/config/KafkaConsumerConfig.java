@@ -50,6 +50,12 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
 
+    @Value("${spring.kafka.consumer.max-poll-records}")
+    private int maxPollRecords;
+
+    @Value("${spring.kafka.consumer.max-poll-interval}")
+    private int maxPollInterval;
+
     @Bean
     public DefaultKafkaConsumerFactory<String, CouponIssue> consumerFactory() {
         Map<String, Object> consumerConfig = new HashMap<>();
@@ -66,6 +72,9 @@ public class KafkaConsumerConfig {
 
         consumerConfig.put(ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
         consumerConfig.put(AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+
+        consumerConfig.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
+        consumerConfig.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, maxPollInterval);
 
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfig,

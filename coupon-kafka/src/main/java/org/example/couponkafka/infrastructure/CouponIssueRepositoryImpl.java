@@ -13,7 +13,7 @@ public class CouponIssueRepositoryImpl implements CouponIssueRepository {
     private final CouponIssueJpaRepository couponIssueJpaRepository;
 
     @Override
-    public CouponIssue save(CouponIssue couponIssue) {
-        return couponIssueJpaRepository.save(CouponIssueEntity.fromModel(couponIssue)).toModel();
+    public void save(CouponIssue couponIssue) {
+        couponIssueJpaRepository.save(CouponIssueEntity.fromModel(couponIssue)).toModel();
     }
 }
